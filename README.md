@@ -1,5 +1,7 @@
 # Condition Editor
 
+In the real application, this is part of a **condition builder** that determines which resolution options (Return By Mail, Exchange, Store Credit, etc.) are available to a customer based on their order data and cart state. You're building a slice of that system: a UI for creating conditions and a backend for evaluating them.
+
 Build a condition editor with two parts:
 
 1. A **Node/Express backend** that serves data and evaluates conditions
@@ -7,7 +9,7 @@ Build a condition editor with two parts:
 
 The editor also includes a nested reason selector with checkboxes.
 
-Use AI tools freely. Use TypeScript for all code.
+Use TypeScript for all code.
 
 ---
 
@@ -26,6 +28,15 @@ npm run dev    # Runs on http://localhost:3000, proxies /api to backend
 ```
 
 Types are defined in `frontend/src/types.ts` and `backend/src/types.ts`.
+
+---
+
+## Guidelines
+
+- **Time:** You have ~45-50 minutes. You're not expected to finish everything — we care about your process, not completion.
+- **AI:** Use AI tools freely, but don't paste this entire README as a single prompt. We want to see how you break down problems and iterate with AI.
+- **Evaluation:** We're watching how efficiently you use AI tooling, how you prompt, and how you debug when things go wrong.
+- **Testing:** Vitest is pre-configured in both frontend and backend (`npm test`) if you want to write tests.
 
 ---
 
@@ -84,8 +95,8 @@ These fields map to properties inside the order object (see `GET /api/orders` fo
 |-------|------|---------------|-------|
 | Customer Email | string | `customer.email` | |
 | Order Total | number | `billing.amount` | |
-| Item Price | number | `order_items.unit_price` | Array field — each order has multiple items |
-| Carrier | string | `shipments.carrier` | Array field — each order has multiple shipments |
+| Item Price | number | `order_items.unit_price` | Array field |
+| Carrier | string | `shipments.carrier` | Array field |
 | Country | string | `customer.address.country` | |
 | Is Final Sale | boolean | `order_items.is_final_sale` | Array field |
 | Is Gift | boolean | `order_items.is_gift` | Array field |
@@ -128,21 +139,23 @@ Conditions can be nested using AND/OR groups. Here is an example request:
 
 Response: `{ "match": true }`
 
-Some fields (like `order_items.unit_price`) point to arrays in the order object. For example, an order can have many items, each with its own price. You need to decide how to handle this. For example: does `order_items.unit_price GT 100` mean "any item over $100" or "all items over $100"? The choice is yours.
+Some fields (like `order_items.unit_price`) point to arrays in the order object. For example, an order can have many items, each with its own price. You need to decide: does `order_items.unit_price GT 100` mean **"any item over $100"** or **"all items over $100"**? The choice is yours — be prepared to explain your reasoning.
+
+The **Reason** field requires a design decision too: what does the condition value look like for a reason? How does the backend match it against the order? Think about what makes sense given that reasons come from a tree structure with selected nodes.
 
 **Example rules your endpoint should handle:**
 - `customer.email CONTAINS @example.com` — email contains "@example.com"
 - `billing.amount GT 500` — order total is greater than 500
-- `order_items.unit_price GT 100` — at least one item is priced over 100
+- `order_items.unit_price GT 100` — item price over 100 (your semantics)
 - `shipments.carrier EQ fedex` — carrier is "fedex"
-- `order_items.is_final_sale EQ true` — at least one item is final sale
+- `order_items.is_final_sale EQ true` — final sale check (your semantics)
 - `customer.address.country NOT_EQ US` — country is not "US"
 
 ---
 
 ## Part 2 — Frontend
 
-Build a condition editor sidebar.
+Build a condition editor UI.
 
 ### Condition Rows
 
@@ -181,7 +194,12 @@ Add an "Evaluate" button. When clicked, it sends the current conditions to `POST
 
 ## Stretch Goals
 
-If you have extra time:
+If you have extra time, consider these extensions:
 
-- Support multiple cases (Case 1, Case 2, Else)
-- Support nested condition groups within a case
+### Nested Condition Groups
+
+Within a single case, support sub-groups that have their own AND/OR logic. For example: `(email contains "@vip.com" OR total > 1000) AND country is "US"`. See `screenshots/nested-group.png` and `screenshots/condition-joining.png` for reference.
+
+### Multiple Cases
+
+Support a Case 1 / Case 2 / Else structure where each case has its own set of conditions and maps to a different resolution option. This mirrors the real application: Case 1 conditions → Return By Mail, Case 2 → Exchange, Else → Store Credit. See `screenshots/secondary-case.png` and `screenshots/condition-builder.png` for reference.
