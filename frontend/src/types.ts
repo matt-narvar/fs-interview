@@ -27,6 +27,21 @@ export interface ConditionFieldsResponse {
   operators: Record<FieldType, Operator[]>;
 }
 
+// ---- Return Cart ----
+
+export interface ReturnItem {
+  item_id: string;
+  reason_id: string;
+  quantity: number;
+}
+
+export interface ReturnCart {
+  id: string;
+  description: string;
+  order_info: OrderPayload['order_info'];
+  return_items: ReturnItem[];
+}
+
 // ---- Condition Evaluation ----
 
 export interface Condition {
@@ -42,7 +57,7 @@ export interface ConditionGroup {
 
 export interface EvaluateRequest {
   conditions: ConditionGroup;
-  order: OrderPayload;
+  cart: ReturnCart;
 }
 
 export interface EvaluateResponse {

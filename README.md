@@ -1,6 +1,6 @@
 # Condition Editor
 
-In the real application, this is part of a **condition builder** that determines which resolution options (Return By Mail, Exchange, Store Credit, etc.) are available to a customer based on their order data and cart state. You're building a slice of that system: a UI for creating conditions and a backend for evaluating them.
+In the real application, this is part of a **condition builder** that determines which resolution options (Return By Mail, Exchange, Store Credit, etc.) are available to a customer based on their **return cart** — an order combined with the customer's in-progress return selections (which items they're returning and why). You're building a slice of that system: a UI for creating conditions and a backend for evaluating them against return carts.
 
 Build a condition editor with two parts:
 
@@ -101,7 +101,7 @@ These fields map to properties inside the order object (see `GET /api/orders` fo
 | Is Final Sale | boolean | `order_items.is_final_sale` | Array field |
 | Is Gift | boolean | `order_items.is_gift` | Array field |
 | Item Color | string | `order_items.color` | Array field |
-| Reason | special | — | Values come from `/api/reasons` |
+| Reason | special | `return_items[].reason_id` | Values come from `/api/reasons`; evaluates against `return_items[].reason_id` |
 
 Operators by type:
 - **string**: is, is not, contains, starts with, ends with
@@ -110,11 +110,15 @@ Operators by type:
 
 ### `GET /api/orders`
 
-Already implemented. Returns the sample orders from `backend/src/data/orders.ts`. These are the orders that conditions will be tested against. There are 4 orders with different characteristics (high/low value, domestic/international, gifts, final sale items, different carriers, etc.).
+Already implemented. Returns the raw sample orders from `backend/src/data/orders.ts`. These show the underlying order structure for reference. There are 4 orders with different characteristics (high/low value, domestic/international, gifts, final sale items, different carriers, etc.).
+
+### `GET /api/return-carts`
+
+Already implemented. Returns sample return carts from `backend/src/data/return-carts.ts`. Each return cart combines order data with `return_items` — the items the customer is returning along with their reason IDs (from the reason tree). These are the **evaluation target** for conditions. There are 4 carts covering different scenarios (fit reasons, damage reasons, final sale items, bulk returns).
 
 ### `POST /api/conditions/evaluate`
 
-Accept a set of conditions and an order. Return whether the order matches.
+Accept a set of conditions and a return cart. Return whether the cart matches.
 
 Conditions can be nested using AND/OR groups. Here is an example request:
 
@@ -133,15 +137,15 @@ Conditions can be nested using AND/OR groups. Here is an example request:
       }
     ]
   },
-  "order": { ... }
+  "cart": { ... }
 }
 ```
 
 Response: `{ "match": true }`
 
-Some fields (like `order_items.unit_price`) point to arrays in the order object. For example, an order can have many items, each with its own price. You need to decide: does `order_items.unit_price GT 100` mean **"any item over $100"** or **"all items over $100"**? The choice is yours — be prepared to explain your reasoning.
+Some fields (like `order_items.unit_price`) point to arrays in the cart's order info. For example, an order can have many items, each with its own price. You need to decide: does `order_items.unit_price GT 100` mean **"any item over $100"** or **"all items over $100"**? The choice is yours — be prepared to explain your reasoning.
 
-The **Reason** field requires a design decision too: what does the condition value look like for a reason? How does the backend match it against the order? Think about what makes sense given that reasons come from a tree structure with selected nodes.
+The **Reason** field evaluates against `return_items[].reason_id` in the cart. The reason IDs come from the reason tree (e.g., `"too-large-collar"`, `"ripped"`). A design decision: does matching check for an exact leaf reason, or should a parent ID like `"fit"` match any reason under it (prefix matching)? Think about what makes sense for the condition builder UX.
 
 **Example rules your endpoint should handle:**
 - `customer.email CONTAINS @example.com` — email contains "@example.com"
@@ -150,6 +154,7 @@ The **Reason** field requires a design decision too: what does the condition val
 - `shipments.carrier EQ fedex` — carrier is "fedex"
 - `order_items.is_final_sale EQ true` — final sale check (your semantics)
 - `customer.address.country NOT_EQ US` — country is not "US"
+- `return_items.reason_id EQ too-large-collar` — return reason matches (your semantics)
 
 ---
 
@@ -188,7 +193,7 @@ When the user picks **"Reason"** as the field, the value input changes to a chec
 
 ### Evaluate Button
 
-Add an "Evaluate" button. When clicked, it sends the current conditions to `POST /api/conditions/evaluate` along with one of the sample orders from `GET /api/orders`. Display whether the order matched or not. You can let the user pick which order to test, or use a hardcoded one.
+Add an "Evaluate" button. When clicked, it sends the current conditions to `POST /api/conditions/evaluate` along with one of the sample return carts from `GET /api/return-carts`. Display whether the cart matched or not. You can let the user pick which cart to test, or use a hardcoded one.
 
 ---
 

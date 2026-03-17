@@ -21,7 +21,7 @@ export const fieldsRouter = Router();
 //   - Is Final Sale (order_items.is_final_sale, boolean — note: array field)
 //   - Is Gift (order_items.is_gift, boolean — note: array field)
 //   - Item Color (order_items.color, string — note: array field)
-//   - Reason (special — values come from /api/reasons)
+//   - Reason (special — values come from /api/reasons; evaluates against return_items[].reason_id)
 
 fieldsRouter.get('/', (req, res) => {
   // Implement: return fields and operators
