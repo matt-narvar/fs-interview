@@ -44,6 +44,15 @@ Types are defined in `frontend/src/types.ts` and `backend/src/types.ts`.
 
 Build the API endpoints listed below. Route stubs already exist in `backend/src/routes/`. The orders endpoint already works — you need to implement the rest.
 
+### How order data and return cart data fit together
+
+When a customer starts a return, there are two kinds of data:
+
+- **Order data**: the original purchase (email, billing amount, shipments, items, etc.)
+- **Return cart data**: what the customer is doing *right now* in the returns flow (which items they selected to return, and the reason chosen for each item)
+
+For this exercise, **rules are evaluated against a return cart**. The return cart includes order information plus return-specific information (reasons). Think of the request to `POST /api/conditions/evaluate` as a **snapshot in time** of the customer’s return cart.
+
 ### `GET /api/reasons`
 
 Return a reason tree. The tree must be at least 3 levels deep with multiple branches. Use this structure:
@@ -89,7 +98,7 @@ Response shape:
 
 Return the list of fields that can be used in conditions. Each field has a type and a set of valid operators.
 
-These fields map to properties inside the order object (see `GET /api/orders` for the full structure).
+These fields map to properties inside the **return cart** payload (see `GET /api/return-carts` for the full structure). Most fields come from the cart’s embedded order info, but **Reason** comes from the cart’s `return_items`.
 
 | Field | Type | Path in Order | Notes |
 |-------|------|---------------|-------|
