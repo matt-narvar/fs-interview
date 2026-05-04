@@ -1,0 +1,76 @@
+.panel {
+  border-top: 1px solid #e5e7eb;
+  padding-top: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.heading {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: #111827;
+  margin: 0;
+}
+
+.row {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.label {
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: #6b7280;
+}
+
+.cartSelect {
+  width: 100%;
+}
+
+.evalBtn {
+  align-self: flex-start;
+  background-color: #1d4ed8;
+  border: none;
+  border-radius: 6px;
+  color: #fff;
+  cursor: pointer;
+  font-size: 0.875rem;
+  font-weight: 500;
+  padding: 8px 20px;
+}
+
+.evalBtn:hover:not(:disabled) {
+  background-color: #1e40af;
+}
+
+.evalBtn:disabled {
+  background-color: #93c5fd;
+  cursor: not-allowed;
+}
+
+.result {
+  border-radius: 6px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  padding: 10px 14px;
+}
+
+.matched {
+  background-color: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  color: #15803d;
+}
+
+.noMatch {
+  background-color: #fef2f2;
+  border: 1px solid #fecaca;
+  color: #b91c1c;
+}
+
+.error {
+  background-color: #fffbeb;
+  border: 1px solid #fde68a;
+  color: #92400e;
+}

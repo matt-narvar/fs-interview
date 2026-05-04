@@ -8,7 +8,7 @@ export interface ReasonNode {
 
 // ---- Condition Fields ----
 
-export type FieldType = 'string' | 'number' | 'enum';
+export type FieldType = 'string' | 'number' | 'boolean';
 
 export interface ConditionField {
   value: string;
@@ -47,7 +47,8 @@ export interface ReturnCart {
 export interface Condition {
   field: string;
   operator: string;
-  value: string | number | boolean;
+  value: string | number | boolean | string[]; // string[] for multi-leaf reason selections
+  quantifier?: 'any' | 'all'; // for array fields; defaults to 'any'
 }
 
 export interface ConditionGroup {
@@ -62,6 +63,23 @@ export interface EvaluateRequest {
 
 export interface EvaluateResponse {
   match: boolean;
+}
+
+// ---- Draft types (frontend-only, never sent to API directly) ----
+
+export interface ConditionDraft {
+  id: string;
+  field: string;
+  operator: string;
+  value: string;
+  selectedReasonIds: string[];
+  quantifier?: 'any' | 'all';
+}
+
+export interface ConditionGroupDraft {
+  id: string;
+  logic: 'AND' | 'OR';
+  conditions: Array<ConditionDraft | ConditionGroupDraft>;
 }
 
 // ---- Order Payload ----

@@ -84,7 +84,8 @@ export interface ReturnCart {
 export interface Condition {
   field: string;
   operator: string;
-  value: string | number | boolean;
+  value: string | number | boolean | string[]; // string[] for multi-leaf reason selections
+  quantifier?: 'any' | 'all'; // for array fields; defaults to 'any'
 }
 
 export interface ConditionGroup {

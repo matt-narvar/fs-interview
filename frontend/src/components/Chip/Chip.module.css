@@ -1,0 +1,29 @@
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background-color: #eff6ff;
+  border: 1px solid #bfdbfe;
+  border-radius: 12px;
+  color: #1d4ed8;
+  font-size: 0.75rem;
+  padding: 2px 8px;
+  white-space: nowrap;
+  max-width: 260px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.remove {
+  background: none;
+  border: none;
+  color: #93c5fd;
+  cursor: pointer;
+  font-size: 0.875rem;
+  line-height: 1;
+  padding: 0;
+}
+
+.remove:hover {
+  color: #1d4ed8;
+}

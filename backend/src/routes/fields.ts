@@ -1,29 +1,43 @@
 import { Router } from 'express';
+import { ConditionFieldsResponse } from '../types.js';
 
 export const fieldsRouter = Router();
 
-// TODO: GET / - Return available condition fields with their types and valid operators
-//
-// Each field maps to a path in the order payload (see /api/orders for structure).
-// Each field has: value (path), label, type (string | number | boolean), and for enums: enumValues
-//
-// Operators vary by type:
-//   - string: EQ, NOT_EQ, CONTAINS, STARTS_WITH, ENDS_WITH
-//   - number: EQ, NOT_EQ, GT, GTE, LT, LTE
-//   - boolean: EQ, NOT_EQ
-//
-// Fields to include (see README for full list):
-//   - Customer Email (customer.email, string)
-//   - Order Total (billing.amount, number)
-//   - Item Price (order_items.unit_price, number — note: array field)
-//   - Carrier (shipments.carrier, string — note: array field)
-//   - Country (customer.address.country, string)
-//   - Is Final Sale (order_items.is_final_sale, boolean — note: array field)
-//   - Is Gift (order_items.is_gift, boolean — note: array field)
-//   - Item Color (order_items.color, string — note: array field)
-//   - Reason (special — values come from /api/reasons; evaluates against return_items[].reason_id)
+const response: ConditionFieldsResponse = {
+  fields: [
+    { value: 'customer.email',            label: 'Customer Email',  type: 'string'  },
+    { value: 'billing.amount',            label: 'Order Total',     type: 'number'  },
+    { value: 'order_items.unit_price',    label: 'Item Price',      type: 'number'  },
+    { value: 'shipments.carrier',         label: 'Carrier',         type: 'string'  },
+    { value: 'customer.address.country',  label: 'Country',         type: 'string'  },
+    { value: 'order_items.is_final_sale', label: 'Is Final Sale',   type: 'boolean' },
+    { value: 'order_items.is_gift',       label: 'Is Gift',         type: 'boolean' },
+    { value: 'order_items.color',         label: 'Item Color',      type: 'string'  },
+    { value: 'return_items.reason_id',    label: 'Reason',          type: 'string'  },
+  ],
+  operators: {
+    string: [
+      { value: 'IS',          label: 'is'          },
+      { value: 'IS_NOT',      label: 'is not'      },
+      { value: 'CONTAINS',    label: 'contains'    },
+      { value: 'STARTS_WITH', label: 'starts with' },
+      { value: 'ENDS_WITH',   label: 'ends with'   },
+    ],
+    number: [
+      { value: 'IS',     label: 'is'  },
+      { value: 'IS_NOT', label: 'is not' },
+      { value: 'GT',     label: '>'   },
+      { value: 'GTE',    label: '>='  },
+      { value: 'LT',     label: '<'   },
+      { value: 'LTE',    label: '<='  },
+    ],
+    boolean: [
+      { value: 'IS',     label: 'is'     },
+      { value: 'IS_NOT', label: 'is not' },
+    ],
+  },
+};
 
 fieldsRouter.get('/', (req, res) => {
-  // Implement: return fields and operators
-  res.status(501).json({ error: 'Not implemented' });
+  res.json(response);
 });
