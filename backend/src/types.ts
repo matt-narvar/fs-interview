@@ -111,7 +111,7 @@ export interface ReasonNode {
 
 // ---- Condition Fields ----
 
-export type FieldType = 'string' | 'number' | 'boolean';
+export type FieldType = 'string' | 'number' | 'boolean' | 'reason';
 
 export interface ConditionField {
   value: string;
