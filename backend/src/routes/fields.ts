@@ -4,8 +4,9 @@ export const fieldsRouter = Router();
 
 // TODO: GET / - Return available condition fields with their types and valid operators
 //
-// Each field maps to a path in the order payload (see /api/orders for structure).
-// Each field has: value (path), label, type (string | number | boolean), and for enums: enumValues
+// Each field has: value (identifier), label, type (string | number | boolean), and for enums: enumValues
+// How a field identifier maps onto the return cart payload is up to you
+// (see /api/return-carts for the structure).
 //
 // Operators vary by type:
 //   - string: EQ, NOT_EQ, CONTAINS, STARTS_WITH, ENDS_WITH
@@ -13,15 +14,15 @@ export const fieldsRouter = Router();
 //   - boolean: EQ, NOT_EQ
 //
 // Fields to include (see README for full list):
-//   - Customer Email (customer.email, string)
-//   - Order Total (billing.amount, number)
-//   - Item Price (order_items.unit_price, number — note: array field)
-//   - Carrier (shipments.carrier, string — note: array field)
-//   - Country (customer.address.country, string)
-//   - Is Final Sale (order_items.is_final_sale, boolean — note: array field)
-//   - Is Gift (order_items.is_gift, boolean — note: array field)
-//   - Item Color (order_items.color, string — note: array field)
-//   - Reason (special — values come from /api/reasons; evaluates against return_items[].reason_id)
+//   - Customer Email (string)
+//   - Order Total (number)
+//   - Item Price (number)
+//   - Carrier (string)
+//   - Country (string)
+//   - Is Final Sale (boolean)
+//   - Is Gift (boolean)
+//   - Item Color (string)
+//   - Reason (special — Part 2; values come from /api/reasons)
 
 fieldsRouter.get('/', (req, res) => {
   // Implement: return fields and operators

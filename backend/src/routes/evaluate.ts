@@ -21,24 +21,25 @@ export const evaluateRouter = Router();
 //
 // Operators: EQ, NOT_EQ, GT, GTE, LT, LTE, CONTAINS, STARTS_WITH, ENDS_WITH
 //
-// The cart's order_info is a nested object with arrays (order_items, shipments).
-// How you resolve fields like "order_items.unit_price" against arrays is up to you.
+// How a condition's field maps onto the cart payload is up to you. Some fields
+// (e.g. Item Price) don't have a single value per cart — how you resolve those
+// is a design decision.
 //
-// The Reason field evaluates against return_items[].reason_id.
+// The Reason field (Part 2) evaluates against return_items[].reason_id.
 // Whether matching is exact (leaf only) or prefix-based (parent categories like "fit")
 // is a design decision for the candidate.
 //
 // Return: { match: boolean }
 //
 // Example rules to support:
-//   - "customer.email CONTAINS @example.com"
-//   - "billing.amount GT 500"
-//   - "order_items.unit_price GT 100" (any item priced over $100)
-//   - "order_items.is_final_sale EQ true" (any item is final sale)
-//   - "shipments.carrier EQ fedex"
-//   - "return_items.reason_id EQ too-large-collar" (any return item has this reason)
+//   - Customer Email contains "@example.com"
+//   - Order Total > 500
+//   - Item Price > 100 (your semantics)
+//   - Is Final Sale is true (your semantics)
+//   - Carrier is "fedex"
+//   - Reason is "too-large-collar" (Part 2; your semantics)
 
 evaluateRouter.post('/', (req, res) => {
-  // Implement: evaluate the conditions against the order
+  // Implement: evaluate the conditions against the return cart
   res.status(501).json({ error: 'Not implemented' });
 });

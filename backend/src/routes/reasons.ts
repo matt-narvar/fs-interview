@@ -4,7 +4,7 @@ export const reasonsRouter = Router();
 
 // TODO: GET / - Return a hierarchical reason tree
 // The tree should be at least 3 levels deep with multiple branches.
-// See screenshots/nested-reasons-all.png for the expected data shape.
+// See the README (Part 2) for the expected data shape.
 //
 // Example structure:
 //   Fit

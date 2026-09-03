@@ -53,4 +53,17 @@ export const sampleReturnCarts: ReturnCart[] = [
       },
     ],
   },
+
+  {
+    id: 'cart-5',
+    description: 'Mixed order — returning wool scarf for fit (too short, waist)',
+    order_info: sampleOrders[2].order_info,
+    return_items: [
+      {
+        item_id: 'item-8',
+        reason_id: 'too-short-waist',
+        quantity: 1,
+      },
+    ],
+  },
 ];
